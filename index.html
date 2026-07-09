@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PiutangKu — Local First</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-app: radial-gradient(circle at top left, #1e1b4b 0%, #0f0728 50%, #03001e 100%);
+      --surface: rgba(30, 27, 75, 0.45);
+      --surface-hover: rgba(255, 255, 255, 0.08);
+      --surface-2: rgba(255, 255, 255, 0.05);
+      --primary: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --primary-hover: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+      --primary-accent: #818cf8;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(129, 140, 248, 0.4);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #f43f5e;
+      --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      --radius: 24px;
+      --glass-blur: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #111827, #030712);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      outline: none;
+    }
+
+    #app {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .app-container {
+      aspect-ratio: 10/21;
+      height: min(915px, calc(100vh - 40px));
+      max-width: 440px;
+      background: var(--bg-app);
+      box-shadow: var(--shadow-lg), 0 0 0 12px rgba(15, 23, 42, 0.8), 0 0 40px rgba(99, 102, 241, 0.15);
+      border-radius: 44px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .app-notch {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #0f172a;
+      border-radius: 14px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .app-notch:after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 50%;
+      margin-left: 60px;
+      box-shadow: 0 0 4px rgba(99,102,241,0.5);
+    }
+
+    .phone-status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 6px 28px 0;
+      height: 24px;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .status-bar-time {
+      font-size: .7rem;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: .5px;
+    }
+
+    .app-body {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      padding-top: 26px;
+    }
+
+    .screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: transparent;
+    }
+
+    .scroll {
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      padding: 20px 20px 108px;
+      scrollbar-width: none;
+    }
+
+    .scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topbar {
+      padding: 20px 20px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: var(--primary);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.25rem;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+      position: relative;
+    }
+    
+    .logo::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+      pointer-events: none;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Outfit', sans-serif;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .muted {
+      color: var(--text-secondary);
+      font-size: .8rem;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: grid;
+      place-items: center;
+      color: var(--primary-accent);
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .avatar:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .card {
+      background: var(--surface);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.7) 0%, rgba(168, 85, 247, 0.7) 100%);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .hero:after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+      pointer-events: none;
+    }
+
+    .hero .muted {
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+    
+    .hero h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 6px 0;
+      letter-spacing: -0.03em;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--surface);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+    
+    .stat:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 1.15rem;
+      font-family: 'Outfit', sans-serif;
+      margin-top: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 12px;
+      padding: 6px 12px;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .chip.ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .chip.warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .chip.bad {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.25);
+    }
+
+    .btn {
+      border-radius: 16px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: .88rem;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+    
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn.primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 10px 24px rgba(99, 102, 241, 0.45);
+    }
+
+    .btn.danger {
+      background: rgba(244, 63, 94, 0.2);
+      color: #ff859b;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    
+    .btn.danger:hover {
+      background: rgba(244, 63, 94, 0.3);
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      box-shadow: none;
+    }
+    
+    .btn.ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+    
+    .btn.mini {
+      min-height: 32px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      border-radius: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field span {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--text-primary);
+      border-radius: 16px;
+      padding: 14px 16px;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .input:focus {
+      border-color: var(--primary-accent);
+      background: rgba(15, 23, 42, 0.7);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    select.input option {
+      background-color: #0f172a;
+      color: var(--text-primary);
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .row:hover {
+      background: var(--surface-hover);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .row-main {
+      min-width: 0;
+    }
+
+    .row-main b, .truncate {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+    }
+
+    .tabs {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 6px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+      z-index: 20;
+    }
+
+    .tab {
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      padding: 10px 4px;
+      border-radius: 22px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: .68rem;
+      font-weight: 700;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #a5b4fc;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    
+    .tab:hover:not(.active) {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .icon {
+      font-size: 1.25rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+
+    .login {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px;
+      background: transparent;
+    }
+
+    .login-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 28px;
+      background: var(--primary);
+      color: white;
+      display: grid;
+      place-items: center;
+      font: 900 2.25rem 'Outfit', sans-serif;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
+      position: relative;
+    }
+    
+    .login-logo::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 27px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+    }
+    
+    .login h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .mini {
+      font-size: .74rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    
+    .table-wrap::-webkit-scrollbar {
+      display: none;
+    }
+
+    .compact-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      font-size: .8rem;
+    }
+
+    .compact-table th {
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 8px 12px;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+
+    .compact-table td {
+      text-align: left;
+      padding: 12px;
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .compact-table td:first-child, .compact-table th:first-child {
+      border-left: 1px solid var(--border);
+      border-radius: 16px 0 0 16px;
+    }
+
+    .compact-table td:last-child, .compact-table th:last-child {
+      border-right: 1px solid var(--border);
+      border-radius: 0 16px 16px 0;
+    }
+
+    .toast {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 60px;
+      z-index: 1050;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      border-radius: 18px;
+      padding: 14px 18px;
+      font-size: .84rem;
+      font-weight: 600;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: translateY(-20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      width: 100%;
+      border-radius: 36px 36px 0 0;
+      padding: 24px;
+      max-height: 85%;
+      overflow-y: auto;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+      scrollbar-width: none;
+    }
+    
+    .modal-backdrop.show .modal {
+      transform: translateY(0);
+    }
+    
+    .modal h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .sep {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    .role-badge {
+      font-size: .7rem;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(129, 140, 248, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(129, 140, 248, 0.25);
+      font-weight: 700;
+    }
+
+    .danger-text {
+      color: #ff859b;
+    }
+
+    .success-text {
+      color: #34d399;
+    }
+
+    .analysis {
+      font-size: .78rem;
+      line-height: 1.5;
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px dashed rgba(99, 102, 241, 0.25);
+      border-radius: 20px;
+      padding: 16px;
+      color: #c7d2fe;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Screen Fade/Slide Transition animation class */
+    .fade-in-slide {
+      animation: fadeInSlide 0.35s cubic-bezier(0.1, 0.76, 0.55, 0.94) forwards;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media(max-width:500px) {
+      body {
+        background: radial-gradient(circle at top left, #1e1b4b 0%, #0f0728 50%, #03001e 100%);
+      }
+      #app {
+        min-height: 100vh;
+        min-height: 100dvh;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 0;
+      }
+      .app-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: none !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        aspect-ratio: unset !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: 0 !important;
+        padding-top: env(safe-area-inset-top, 0);
+      }
+      .app-notch, .phone-status-bar {
+        display: none !important;
+      }
+      .app-body {
+        padding-top: 8px !important;
+      }
+      .tabs {
+        left: 14px;
+        right: 14px;
+        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+        border-radius: 24px;
+      }
+      .scroll {
+        padding: 16px 16px calc(92px + env(safe-area-inset-bottom, 0px));
+      }
+    }
+  </style>
+</head><body><div id="app"><div class="app-container"><div class="app-notch"></div><div class="phone-status-bar"><span class="status-bar-time" id="clock">12.10</span></div><main class="app-body" id="appBody"></main><div class="toast" id="toast"></div><div class="modal-backdrop" id="modal"><div class="modal" id="modalContent"></div></div></div></div>
+<script>
+const IDB_NAME = 'piutangku-db-v1';
+const IDB_STORE = 'sqlite';
+const IDB_KEY = 'main';
+
+let SQL, db, session = null, currentRoute = 'dashboard', chart = null, fallback = false;
+
+const rupiah = n => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(Number(n || 0));
+const today = () => new Date().toISOString().slice(0, 10);
+const uid = p => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const $ = s => document.querySelector(s);
+
+setInterval(() => {
+  const clockEl = $('#clock');
+  if (clockEl) {
+    clockEl.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  }
+}, 1000);
+
+function toast(msg) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+function idb() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(IDB_NAME, 1);
+    r.onupgradeneeded = () => r.result.createObjectStore(IDB_STORE);
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+
+async function idbGet() {
+  const x = await idb();
+  return new Promise((res, rej) => {
+    const t = x.transaction(IDB_STORE, 'readonly').objectStore(IDB_STORE).get(IDB_KEY);
+    t.onsuccess = () => res(t.result);
+    t.onerror = () => rej(t.error);
+  });
+}
+
+async function idbSet(data) {
+  const x = await idb();
+  return new Promise((res, rej) => {
+    const t = x.transaction(IDB_STORE, 'readwrite').objectStore(IDB_STORE).put(data, IDB_KEY);
+    t.onsuccess = () => res();
+    t.onerror = () => rej(t.error);
+  });
+}
+
+function localSave() {
+  try {
+    localStorage.setItem('piutangku_sqlite_b64', btoa(String.fromCharCode(...db.export())));
+  } catch (e) {
+    console.error('Local fallback storage failed:', e);
+  }
+}
+
+async function persist() {
+  try {
+    await idbSet(db.export());
+  } catch (e) {
+    fallback = true;
+    localSave();
+  }
+}
+
+function exec(sql, params = []) {
+  db.run(sql, params);
+  return persist();
+}
+
+function all(sql, params = []) {
+  const st = db.prepare(sql, params);
+  const rows = [];
+  while (st.step()) {
+    rows.push(st.getAsObject());
+  }
+  st.free();
+  return rows;
+}
+
+function one(sql, params = []) {
+  return all(sql, params)[0] || null;
+}
+
+function schema() {
+  db.run(`PRAGMA foreign_keys=ON;
+  CREATE TABLE IF NOT EXISTS profiles(
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role TEXT CHECK(role IN('admin','finance','owner')) NOT NULL,
+    is_active INTEGER DEFAULT 1,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE TABLE IF NOT EXISTS customers(
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    phone TEXT,
+    address TEXT,
+    notes TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE TABLE IF NOT EXISTS receivables(
+    id TEXT PRIMARY KEY,
+    customer_id TEXT NOT NULL,
+    invoice_no TEXT UNIQUE NOT NULL,
+    transaction_date TEXT NOT NULL,
+    due_date TEXT NOT NULL,
+    principal_amount REAL NOT NULL CHECK(principal_amount>=0),
+    remaining_amount REAL NOT NULL DEFAULT 0,
+    status TEXT CHECK(status IN('unpaid','partial','paid','overdue')) DEFAULT 'unpaid',
+    description TEXT,
+    attachment_base64 TEXT,
+    created_by TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+    FOREIGN KEY(created_by) REFERENCES profiles(id)
+  );
+  CREATE TABLE IF NOT EXISTS payments(
+    id TEXT PRIMARY KEY,
+    receivable_id TEXT NOT NULL,
+    payment_date TEXT NOT NULL,
+    amount REAL NOT NULL CHECK(amount>0),
+    note TEXT,
+    created_by TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(receivable_id) REFERENCES receivables(id) ON DELETE CASCADE,
+    FOREIGN KEY(created_by) REFERENCES profiles(id)
+  );
+  CREATE TABLE IF NOT EXISTS audit_logs(
+    id TEXT PRIMARY KEY,
+    actor_id TEXT,
+    action TEXT,
+    entity TEXT,
+    entity_id TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
+
+  DROP TRIGGER IF EXISTS trg_receivable_insert;
+  CREATE TRIGGER trg_receivable_insert AFTER INSERT ON receivables 
+  BEGIN 
+    UPDATE receivables 
+    SET remaining_amount = NEW.principal_amount,
+        status = CASE WHEN date(NEW.due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'unpaid' END 
+    WHERE id = NEW.id;
+  END;
+
+  DROP TRIGGER IF EXISTS trg_receivable_update;
+  CREATE TRIGGER trg_receivable_update AFTER UPDATE OF principal_amount, due_date ON receivables
+  BEGIN
+    UPDATE receivables
+    SET remaining_amount = max(NEW.principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.id), 0),
+        status = CASE 
+          WHEN NEW.principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.id) <= 0 THEN 'paid'
+          WHEN NEW.principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.id) = NEW.principal_amount THEN
+            CASE WHEN date(NEW.due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'unpaid' END
+          WHEN date(NEW.due_date) < date('now', 'localtime') THEN 'overdue'
+          ELSE 'partial'
+        END
+    WHERE id = NEW.id;
+  END;
+
+  DROP TRIGGER IF EXISTS trg_payment_insert;
+  CREATE TRIGGER trg_payment_insert AFTER INSERT ON payments 
+  BEGIN 
+    UPDATE receivables 
+    SET remaining_amount = max(principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.receivable_id), 0),
+        status = CASE 
+          WHEN principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.receivable_id) <= 0 THEN 'paid' 
+          WHEN principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.receivable_id) = principal_amount THEN
+            CASE WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'unpaid' END
+          WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' 
+          ELSE 'partial' 
+        END 
+    WHERE id = NEW.receivable_id;
+  END;
+
+  DROP TRIGGER IF EXISTS trg_payment_update;
+  CREATE TRIGGER trg_payment_update AFTER UPDATE ON payments 
+  BEGIN 
+    UPDATE receivables 
+    SET remaining_amount = max(principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.receivable_id), 0),
+        status = CASE 
+          WHEN principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.receivable_id) <= 0 THEN 'paid' 
+          WHEN principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = NEW.receivable_id) = principal_amount THEN
+            CASE WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'unpaid' END
+          WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' 
+          ELSE 'partial' 
+        END 
+    WHERE id = NEW.receivable_id;
+  END;
+
+  DROP TRIGGER IF EXISTS trg_payment_delete;
+  CREATE TRIGGER trg_payment_delete AFTER DELETE ON payments 
+  BEGIN 
+    UPDATE receivables 
+    SET remaining_amount = max(principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = OLD.receivable_id), 0),
+        status = CASE 
+          WHEN principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = OLD.receivable_id) <= 0 THEN 'paid' 
+          WHEN principal_amount - (SELECT COALESCE(SUM(amount), 0) FROM payments WHERE receivable_id = OLD.receivable_id) = principal_amount THEN
+            CASE WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'unpaid' END
+          WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' 
+          ELSE 'partial' 
+        END 
+    WHERE id = OLD.receivable_id;
+  END;`);
+}
+
+function seed() {
+  if (one('SELECT COUNT(*) c FROM profiles').c > 0) return;
+  db.run(`INSERT INTO profiles VALUES 
+    ('u_admin','Andi Pratama','admin@piutangku.local','admin123','admin',1,CURRENT_TIMESTAMP),
+    ('u_finance','Siti Rahmawati','keuangan@piutangku.local','keuangan123','finance',1,CURRENT_TIMESTAMP),
+    ('u_owner','Budi Santoso','pemilik@piutangku.local','pemilik123','owner',1,CURRENT_TIMESTAMP);
+  INSERT INTO customers VALUES 
+    ('c1','Toko Maju Jaya','081234567891','Jl. Mawar No. 10','Pelanggan rutin',CURRENT_TIMESTAMP),
+    ('c2','Warung Bu Lina','082233445566','Jl. Melati No. 4','Bayar mingguan',CURRENT_TIMESTAMP),
+    ('c3','CV Bangun Sentosa','081998887776','Jl. Industri No. 8','Material bangunan',CURRENT_TIMESTAMP);
+  INSERT INTO receivables(id,customer_id,invoice_no,transaction_date,due_date,principal_amount,description,created_by) VALUES 
+    ('r1','c1','INV-001','2026-07-01','2026-07-15',2500000,'Stok sembako kredit','u_finance'),
+    ('r2','c2','INV-002','2026-07-03','2026-07-10',750000,'Barang harian','u_finance'),
+    ('r3','c3','INV-003','2026-06-20','2026-07-05',4200000,'Material renovasi','u_finance');
+  INSERT INTO payments VALUES 
+    ('p1','r1','2026-07-05',500000,'DP awal','u_finance',CURRENT_TIMESTAMP),
+    ('p2','r3','2026-07-01',1200000,'Transfer bank','u_finance',CURRENT_TIMESTAMP);`);
+}
+
+const Services = {
+  auth: {
+    login(email, password) {
+      const u = one('SELECT * FROM profiles WHERE email=? AND password=? AND is_active=1', [email, password]);
+      if (u) {
+        session = u;
+        localStorage.setItem('piutangku_session', u.id);
+      }
+      return u;
+    },
+    restore() {
+      const id = localStorage.getItem('piutangku_session');
+      if (id) session = one('SELECT * FROM profiles WHERE id=?', [id]);
+    },
+    logout() {
+      session = null;
+      localStorage.removeItem('piutangku_session');
+    }
+  },
+  users: {
+    list: () => all('SELECT * FROM profiles ORDER BY role, name'),
+    save: u => exec(u.id ? 'UPDATE profiles SET name=?,email=?,password=?,role=?,is_active=? WHERE id=?' : 'INSERT INTO profiles(id,name,email,password,role,is_active) VALUES (?,?,?,?,?,?)', u.id ? [u.name, u.email, u.password, u.role, u.is_active, u.id] : [uid('u'), u.name, u.email, u.password, u.role, 1]),
+    remove: id => exec('DELETE FROM profiles WHERE id=?', [id])
+  },
+  customers: {
+    list: q => all(`SELECT c.*, COALESCE(SUM(r.remaining_amount), 0) debt FROM customers c LEFT JOIN receivables r ON r.customer_id=c.id GROUP BY c.id HAVING c.name LIKE ? OR c.phone LIKE ? ORDER BY c.name`, [`%${q || ''}%`, `%${q || ''}%`]),
+    save: c => exec(c.id ? 'UPDATE customers SET name=?,phone=?,address=?,notes=? WHERE id=?' : 'INSERT INTO customers(id,name,phone,address,notes) VALUES (?,?,?,?,?)', c.id ? [c.name, c.phone, c.address, c.notes, c.id] : [uid('c'), c.name, c.phone, c.address, c.notes]),
+    remove: id => exec('DELETE FROM customers WHERE id=?', [id])
+  },
+  receivables: {
+    list: f => all(`SELECT r.*, c.name customer_name, (SELECT COALESCE(SUM(amount), 0) FROM payments p WHERE p.receivable_id=r.id) paid FROM receivables r JOIN customers c ON c.id=r.customer_id WHERE (?='all' OR r.status=?) ORDER BY r.due_date ASC`, [f || 'all', f || 'all']),
+    save: r => exec(r.id ? 'UPDATE receivables SET customer_id=?,invoice_no=?,transaction_date=?,due_date=?,principal_amount=?,description=?,attachment_base64=? WHERE id=?' : 'INSERT INTO receivables(id,customer_id,invoice_no,transaction_date,due_date,principal_amount,description,attachment_base64,created_by) VALUES (?,?,?,?,?,?,?,?,?)', r.id ? [r.customer_id, r.invoice_no, r.transaction_date, r.due_date, r.principal_amount, r.description, r.attachment_base64, r.id] : [uid('r'), r.customer_id, r.invoice_no, r.transaction_date, r.due_date, r.principal_amount, r.description, r.attachment_base64, session.id]),
+    remove: id => exec('DELETE FROM receivables WHERE id=?', [id])
+  },
+  payments: {
+    list: id => all('SELECT p.*, r.invoice_no, c.name customer_name FROM payments p JOIN receivables r ON r.id=p.receivable_id JOIN customers c ON c.id=r.customer_id WHERE (? IS NULL OR p.receivable_id=?) ORDER BY p.payment_date DESC', [id || null, id || null]),
+    save: p => exec('INSERT INTO payments(id,receivable_id,payment_date,amount,note,created_by) VALUES (?,?,?,?,?,?)', [uid('p'), p.receivable_id, p.payment_date, p.amount, p.note, session.id])
+  },
+  report: {
+    summary() {
+      return one(`SELECT (SELECT COUNT(*) FROM profiles) users,
+                        (SELECT COUNT(*) FROM customers) customers,
+                        (SELECT COUNT(*) FROM receivables) transactions,
+                        (SELECT COALESCE(SUM(principal_amount), 0) FROM receivables) principal,
+                        (SELECT COALESCE(SUM(amount), 0) FROM payments) paid,
+                        (SELECT COALESCE(SUM(remaining_amount), 0) FROM receivables) remaining,
+                        (SELECT COUNT(DISTINCT customer_id) FROM receivables WHERE remaining_amount>0) debtors`);
+    }
+  }
+};
+
+function can(action) {
+  const r = session?.role;
+  return {
+    manageUsers: r === 'admin',
+    writeCustomers: r === 'admin' || r === 'finance',
+    writeReceivables: r === 'finance',
+    writePayments: r === 'finance',
+    settings: r === 'admin' || r === 'finance',
+    readAll: !!r
+  }[action];
+}
+
+function roleLabel(r) {
+  return { admin: 'Admin', finance: 'Staf Keuangan', owner: 'Pemilik Usaha' }[r] || r;
+}
+
+function statusChip(s) {
+  return s === 'paid' ? '<span class="chip ok">Lunas</span>' : s === 'partial' ? '<span class="chip warn">Sebagian</span>' : s === 'overdue' ? '<span class="chip bad">Jatuh Tempo</span>' : '<span class="chip warn">Belum Lunas</span>';
+}
+
+function layout(content) {
+  return `<section class="screen fade-in-slide">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">P</div>
+        <div>
+          <h1 class="title">PiutangKu</h1>
+          <div class="muted">${roleLabel(session.role)} · ${session.name}</div>
+        </div>
+      </div>
+      <button class="avatar" onclick="go('settings')">${session.name[0]}</button>
+    </div>
+    <div class="scroll">${content}</div>
+    <nav class="tabs">
+      ${[['dashboard', '🏠', 'Beranda'], ['customers', '👥', 'Pelanggan'], ['receivables', '🧾', 'Piutang'], ['reports', '📊', 'Laporan'], ['settings', '⚙️', 'Atur']].map(t => `<button class="tab ${currentRoute === t[0] ? 'active' : ''}" onclick="go('${t[0]}')"><span class="icon">${t[1]}</span>${t[2]}</button>`).join('')}
+    </nav>
+  </section>`;
+}
+
+function renderLogin() {
+  $('#appBody').innerHTML = `<section class="login fade-in-slide">
+    <div class="login-logo">P</div>
+    <h1>PiutangKu</h1>
+    <p class="muted">Aplikasi local-first untuk mencatat piutang, pembayaran, dan laporan UMKM tanpa server.</p>
+    <div class="card">
+      <div class="form">
+        <label class="field">
+          <span>Email</span>
+          <select id="email" class="input">
+            <option>admin@piutangku.local</option>
+            <option>keuangan@piutangku.local</option>
+            <option>pemilik@piutangku.local</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="password" class="input" value="admin123" type="password">
+        </label>
+        <button class="btn primary" onclick="login()">Masuk</button>
+      </div>
+    </div>
+    <div class="analysis">
+      <b>Analisis RBAC:</b> Admin mengelola pengguna dan master; Staf Keuangan mengubah pelanggan, piutang, pembayaran; Pemilik Usaha hanya membaca dashboard, laporan, status pelanggan. Database memakai relasi customers → receivables → payments dengan trigger SQLite untuk menghitung sisa piutang otomatis.
+    </div>
+  </section>`;
+}
+
+function login() {
+  const u = Services.auth.login($('#email').value, $('#password').value);
+  if (!u) return toast('Email atau password tidak sesuai.');
+  currentRoute = 'dashboard';
+  render();
+  toast('Berhasil masuk sebagai ' + roleLabel(u.role));
+}
+
+function go(r) {
+  currentRoute = r;
+  render();
+}
+
+function statsCards(s) {
+  return `<div class="grid">
+    <div class="stat"><span class="muted">Pelanggan</span><b>${s.customers}</b></div>
+    <div class="stat"><span class="muted">Transaksi</span><b>${s.transactions}</b></div>
+    <div class="stat"><span class="muted">Total Piutang</span><b>${rupiah(s.principal)}</b></div>
+    <div class="stat"><span class="muted">Sisa Piutang</span><b class="danger-text">${rupiah(s.remaining)}</b></div>
+  </div>`;
+}
+
+function dashboard() {
+  const s = Services.report.summary();
+  const latest = Services.receivables.list('all').slice(0, 4);
+  return layout(`<div class="card hero">
+    <div class="muted">Ringkasan hari ini</div>
+    <h2>${rupiah(s.remaining)}</h2>
+    <p>Sisa piutang dari ${s.debtors} pelanggan masih perlu dipantau.</p>
+  </div>
+  ${statsCards(s)}
+  <div class="card">
+    <h3>Grafik Piutang</h3>
+    <canvas id="chart" height="160"></canvas>
+  </div>
+  <div class="card">
+    <h3>Transaksi Terdekat</h3>
+    <div class="list">
+      ${latest.map(r => `<div class="row">
+        <div class="row-main">
+          <b>${r.invoice_no} · ${r.customer_name}</b>
+          <span class="muted">Jatuh tempo ${r.due_date}</span>
+        </div>
+        ${statusChip(r.status)}
+      </div>`).join('')}
+    </div>
+  </div>`);
+}
+
+function customers() {
+  let q = '';
+  const rows = Services.customers.list(q);
+  return layout(`<div class="actions">
+    ${can('writeCustomers') ? '<button class="btn primary" onclick="customerForm()">+ Tambah Pelanggan</button>' : ''}
+    <input class="input" placeholder="Cari pelanggan" oninput="filterCustomers(this.value)">
+  </div>
+  <div id="customerList" class="list" style="margin-top:14px">
+    ${customerRows(rows)}
+  </div>`);
+}
+
+function customerRows(rows) {
+  return rows.map(c => `<div class="row">
+    <div class="row-main">
+      <b>${c.name}</b>
+      <span class="muted">${c.phone || '-'} · ${rupiah(c.debt)}</span>
+      <small class="muted truncate">${c.address || ''}</small>
+    </div>
+    ${can('writeCustomers') ? `<button class="btn" onclick="customerForm('${c.id}')">Edit</button>` : ''}
+  </div>`).join('') || '<div class="empty">Belum ada pelanggan.</div>';
+}
+
+function filterCustomers(v) {
+  $('#customerList').innerHTML = customerRows(Services.customers.list(v));
+}
+
+function receivables() {
+  const rows = Services.receivables.list('all');
+  return layout(`<div class="actions">
+    ${can('writeReceivables') ? '<button class="btn primary" onclick="receivableForm()">+ Tambah Piutang</button>' : ''}
+    ${can('writePayments') ? '<button class="btn" onclick="paymentForm()">Catat Bayar</button>' : ''}
+  </div>
+  <div class="list" style="margin-top:14px">
+    ${rows.map(r => `<div class="row">
+      <div class="row-main">
+        <b>${r.invoice_no} · ${r.customer_name}</b>
+        <span class="muted">${rupiah(r.remaining_amount)} dari ${rupiah(r.principal_amount)}</span>
+        <small class="muted">${r.transaction_date} → ${r.due_date}</small>
+      </div>
+      <div>
+        ${statusChip(r.status)}
+        ${can('writeReceivables') ? `<br><button class="btn ghost mini" onclick="Services.receivables.remove('${r.id}').then(render)">Hapus</button>` : ''}
+      </div>
+    </div>`).join('')}
+  </div>`);
+}
+
+function reports() {
+  const s = Services.report.summary();
+  const rows = Services.receivables.list('all');
+  const pays = Services.payments.list();
+  return layout(`<div class="card">
+    <h3>Laporan Piutang</h3>
+    ${statsCards(s)}
+  </div>
+  <div class="card table-wrap">
+    <table class="compact-table">
+      <thead>
+        <tr><th>Invoice</th><th>Pelanggan</th><th>Sisa</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => `<tr>
+          <td>${r.invoice_no}</td>
+          <td>${r.customer_name}</td>
+          <td>${rupiah(r.remaining_amount)}</td>
+          <td>${statusChip(r.status)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Riwayat Pembayaran</h3>
+    <div class="list">
+      ${pays.map(p => `<div class="row">
+        <div>
+          <b>${p.customer_name}</b>
+          <div class="muted">${p.invoice_no} · ${p.payment_date}</div>
+        </div>
+        <b class="success-text">${rupiah(p.amount)}</b>
+      </div>`).join('')}
+    </div>
+  </div>`);
+}
+
+function settings() {
+  return layout(`<div class="card">
+    <h3>Akun</h3>
+    <p class="muted">${session.name}<br>${session.email}</p>
+    <button class="btn danger" onclick="Services.auth.logout();render()">Logout</button>
+  </div>
+  ${can('manageUsers') ? `<div class="card">
+    <h3>Kelola Pengguna</h3>
+    <button class="btn primary" onclick="userForm()">+ Tambah Pengguna</button>
+    <div class="list" style="margin-top:12px">
+      ${Services.users.list().map(u => `<div class="row">
+        <div>
+          <b>${u.name}</b>
+          <div class="muted">${u.email}</div>
+        </div>
+        <div class="actions" style="align-items: center; gap: 8px;">
+          <span class="role-badge">${roleLabel(u.role)}</span>
+          ${u.id !== session.id ? `<button class="btn ghost mini danger-text" onclick="deleteUser('${u.id}')">Hapus</button>` : ''}
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>` : ''}
+  <div class="card">
+    <h3>Cadangan Data</h3>
+    <p class="muted">Ekspor dan impor database lokal agar data tidak hilang saat cache browser dibersihkan.</p>
+    <div class="actions">
+      <button class="btn primary" onclick="exportDb()">Cadangkan Data</button>
+      <label class="btn">Pulihkan Data<input type="file" accept=".sqlite,.json" class="hidden" onchange="importDb(event)"></label>
+    </div>
+    ${fallback ? '<p class="chip warn">Mode fallback aktif: IndexedDB tidak tersedia.</p>' : ''}
+  </div>
+  <div class="card">
+    <h3>Arsitektur Local-First</h3>
+    <div class="analysis">
+      Service pattern terpusat di objek Services: auth, users, customers, receivables, payments, report. Semua perubahan memanggil persist() untuk menyimpan Uint8Array SQLite ke IndexedDB, dengan fallback localStorage Base64. Hash routing disimulasikan melalui location.hash agar aman untuk GitHub Pages.
+    </div>
+  </div>`);
+}
+
+function openModal(html) {
+  $('#modalContent').innerHTML = html;
+  $('#modal').classList.add('show');
+}
+
+function closeModal() {
+  $('#modal').classList.remove('show');
+}
+
+$('#modal').onclick = e => {
+  if (e.target.id === 'modal') closeModal();
+};
+
+function customerForm(id = null) {
+  const c = id ? one('SELECT * FROM customers WHERE id=?', [id]) : {};
+  openModal(`<h2>${c.id ? 'Edit' : 'Tambah'} Pelanggan</h2>
+  <div class="form">
+    <input id="cn" class="input" placeholder="Nama" value="${c.name || ''}">
+    <input id="cp" class="input" placeholder="Telepon" value="${c.phone || ''}">
+    <textarea id="ca" class="input" placeholder="Alamat">${c.address || ''}</textarea>
+    <textarea id="ct" class="input" placeholder="Catatan">${c.notes || ''}</textarea>
+    <button class="btn primary" onclick="saveCustomer('${c.id || ''}')">Simpan</button>
+  </div>`);
+}
+
+async function saveCustomer(id) {
+  const name = $('#cn').value.trim();
+  const phone = $('#cp').value.trim();
+  const address = $('#ca').value.trim();
+  const notes = $('#ct').value.trim();
+
+  if (!name) return toast('Nama pelanggan tidak boleh kosong');
+
+  await Services.customers.save({
+    id: id || null,
+    name,
+    phone,
+    address,
+    notes
+  });
+  closeModal();
+  render();
+  toast('Pelanggan berhasil disimpan');
+}
+
+function receivableForm() {
+  const cs = Services.customers.list('');
+  if (cs.length === 0) {
+    return toast('Tambahkan pelanggan terlebih dahulu di menu Pelanggan.');
+  }
+  openModal(`<h2>Tambah Piutang</h2>
+  <div class="form">
+    <select id="rc" class="input">
+      ${cs.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+    </select>
+    <input id="ri" class="input" placeholder="No Invoice" value="INV-${Date.now().toString().slice(-5)}">
+    <input id="rt" type="date" class="input" value="${today()}">
+    <input id="rd" type="date" class="input" value="${today()}">
+    <input id="ra" type="number" class="input" placeholder="Nominal">
+    <textarea id="rx" class="input" placeholder="Keterangan"></textarea>
+    <input id="rf" type="file" class="input" accept="image/*">
+    <button class="btn primary" onclick="saveReceivable()">Simpan Piutang</button>
+  </div>`);
+}
+
+async function fileBase64(input) {
+  const f = input.files[0];
+  if (!f) return '';
+  return await new Promise(res => {
+    const img = new Image();
+    const fr = new FileReader();
+    fr.onload = () => {
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        const m = 900;
+        const scale = Math.min(1, m / img.width);
+        c.width = img.width * scale;
+        c.height = img.height * scale;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', .72));
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(f);
+  });
+}
+
+async function saveReceivable() {
+  const customerId = $('#rc').value;
+  const invoiceNo = $('#ri').value.trim();
+  const transDate = $('#rt').value;
+  const dueDate = $('#rd').value;
+  const amount = Number($('#ra').value);
+  const desc = $('#rx').value;
+  const fileInput = $('#rf');
+
+  if (!customerId) return toast('Pilih pelanggan terlebih dahulu');
+  if (!invoiceNo) return toast('Nomor invoice tidak boleh kosong');
+  if (!transDate) return toast('Pilih tanggal transaksi');
+  if (!dueDate) return toast('Pilih tanggal jatuh tempo');
+  if (isNaN(amount) || amount <= 0) return toast('Nominal harus lebih besar dari 0');
+
+  // Check unique invoice
+  const exist = one('SELECT id FROM receivables WHERE invoice_no=?', [invoiceNo]);
+  if (exist) return toast('Nomor invoice sudah digunakan');
+
+  let attachment = '';
+  if (fileInput.files.length > 0) {
+    attachment = await fileBase64(fileInput);
+  }
+
+  await Services.receivables.save({
+    customer_id: customerId,
+    invoice_no: invoiceNo,
+    transaction_date: transDate,
+    due_date: dueDate,
+    principal_amount: amount,
+    description: desc,
+    attachment_base64: attachment
+  });
+  closeModal();
+  render();
+  toast('Piutang berhasil disimpan');
+}
+
+function paymentForm() {
+  const rs = Services.receivables.list('all').filter(r => r.remaining_amount > 0);
+  if (rs.length === 0) {
+    return toast('Tidak ada piutang aktif yang perlu dibayar.');
+  }
+  openModal(`<h2>Catat Pembayaran</h2>
+  <div class="form">
+    <select id="pr" class="input">
+      ${rs.map(r => `<option value="${r.id}">${r.invoice_no} · ${r.customer_name} · ${rupiah(r.remaining_amount)}</option>`).join('')}
+    </select>
+    <input id="pd" type="date" class="input" value="${today()}">
+    <input id="pa" type="number" class="input" placeholder="Nominal dibayar">
+    <textarea id="pn" class="input" placeholder="Keterangan"></textarea>
+    <button class="btn primary" onclick="savePayment()">Simpan Pembayaran</button>
+  </div>`);
+}
+
+async function savePayment() {
+  const receivableId = $('#pr').value;
+  const payDate = $('#pd').value;
+  const amount = Number($('#pa').value);
+  const note = $('#pn').value;
+
+  if (!receivableId) return toast('Pilih invoice terlebih dahulu');
+  if (!payDate) return toast('Pilih tanggal pembayaran');
+  if (isNaN(amount) || amount <= 0) return toast('Nominal pembayaran harus lebih besar dari 0');
+
+  // Check remaining amount
+  const rec = one('SELECT remaining_amount, invoice_no FROM receivables WHERE id=?', [receivableId]);
+  if (!rec) return toast('Piutang tidak ditemukan');
+  if (amount > rec.remaining_amount) {
+    return toast(`Nominal pembayaran melebihi sisa piutang (${rupiah(rec.remaining_amount)})`);
+  }
+
+  await Services.payments.save({
+    receivable_id: receivableId,
+    payment_date: payDate,
+    amount: amount,
+    note: note
+  });
+  closeModal();
+  render();
+  toast('Pembayaran berhasil disimpan');
+}
+
+function userForm() {
+  openModal(`<h2>Tambah Pengguna</h2>
+  <div class="form">
+    <input id="un" class="input" placeholder="Nama">
+    <input id="ue" class="input" placeholder="Email">
+    <input id="up" class="input" placeholder="Password" type="password">
+    <select id="ur" class="input">
+      <option value="admin">Admin</option>
+      <option value="finance">Staf Keuangan</option>
+      <option value="owner">Pemilik Usaha</option>
+    </select>
+    <button class="btn primary" onclick="saveUser()">Simpan</button>
+  </div>`);
+}
+
+async function saveUser() {
+  const name = $('#un').value.trim();
+  const email = $('#ue').value.trim();
+  const password = $('#up').value;
+  const role = $('#ur').value;
+
+  if (!name) return toast('Nama tidak boleh kosong');
+  if (!email) return toast('Email tidak boleh kosong');
+  if (!password) return toast('Password tidak boleh kosong');
+
+  // Check unique email
+  const exist = one('SELECT id FROM profiles WHERE email=?', [email]);
+  if (exist) return toast('Email sudah terdaftar');
+
+  await Services.users.save({ name, email, password, role });
+  closeModal();
+  render();
+  toast('Pengguna berhasil disimpan');
+}
+
+async function deleteUser(id) {
+  if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+    await Services.users.remove(id);
+    render();
+    toast('Pengguna berhasil dihapus');
+  }
+}
+
+function exportDb() {
+  const a = document.createElement('a');
+  const blob = new Blob([db.export()], { type: 'application/octet-stream' });
+  a.href = URL.createObjectURL(blob);
+  a.download = 'piutangku-backup.sqlite';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function importDb(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const buf = await f.arrayBuffer();
+    const tempDb = new SQL.Database(new Uint8Array(buf));
+    tempDb.run("PRAGMA foreign_keys=ON;");
+    db = tempDb;
+    schema();
+    await persist();
+    render();
+    toast('Data berhasil dipulihkan');
+  } catch (err) {
+    console.error(err);
+    toast('Gagal memulihkan data: Format berkas tidak valid.');
+  }
+}
+
+function render() {
+  if (!session) return renderLogin();
+  location.hash = currentRoute;
+  appBody.innerHTML = { dashboard, customers, receivables, reports, settings }[currentRoute]?.() || dashboard();
+  if (currentRoute === 'dashboard') {
+    setTimeout(() => {
+      const s = Services.report.summary();
+      if (chart) chart.destroy();
+
+      const chartData = (s.paid === 0 && s.remaining === 0)
+        ? { data: [1], labels: ['Belum ada data'], colors: ['#cbd5e1'] }
+        : { data: [s.paid, s.remaining], labels: ['Terbayar', 'Sisa'], colors: ['#16a34a', '#2563eb'] };
+
+      chart = new Chart($('#chart'), {
+        type: 'doughnut',
+        data: {
+          labels: chartData.labels,
+          datasets: [{
+            data: chartData.data,
+            backgroundColor: chartData.colors,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          cutout: '68%'
+        }
+      });
+    }, 0);
+  }
+}
+
+async function boot() {
+  try {
+    SQL = await initSqlJs({ locateFile: file => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/' + file });
+    let bytes = null;
+    try {
+      bytes = await idbGet();
+    } catch (e) {
+      const b = localStorage.getItem('piutangku_sqlite_b64');
+      if (b) bytes = Uint8Array.from(atob(b), c => c.charCodeAt(0));
+      fallback = true;
+    }
+    db = bytes ? new SQL.Database(bytes) : new SQL.Database();
+    schema();
+    seed();
+
+    // Auto-update all receivable statuses to overdue if due date has passed
+    db.run(`UPDATE receivables SET status = CASE
+      WHEN remaining_amount <= 0 THEN 'paid'
+      WHEN remaining_amount = principal_amount THEN
+        CASE WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'unpaid' END
+      ELSE
+        CASE WHEN date(due_date) < date('now', 'localtime') THEN 'overdue' ELSE 'partial' END
+    END`);
+
+    await persist();
+    Services.auth.restore();
+    currentRoute = location.hash.replace('#', '') || 'dashboard';
+    render();
+    if (fallback) toast('IndexedDB tidak tersedia. Aplikasi memakai fallback lokal sementara.');
+  } catch (e) {
+    fallback = true;
+    console.error(e);
+    alert('SQLite WASM gagal dimuat. Jalankan file ini dengan internet aktif atau host yang melayani sql.js.');
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  currentRoute = location.hash.replace('#', '') || 'dashboard';
+  render();
+});
+boot();
+</script></body></html>
