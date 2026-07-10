@@ -7,16 +7,700 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
-<script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
 <style>
-:root{--bg-app:#f7fbff;--surface:#fff;--surface-2:#eef6ff;--primary:#2563eb;--primary-2:#0ea5e9;--text-primary:#0f172a;--text-secondary:#64748b;--border:#dbeafe;--green:#16a34a;--orange:#f97316;--red:#ef4444;--shadow-lg:0 24px 80px rgba(15,23,42,.35);--radius:22px}*{box-sizing:border-box}body{background:radial-gradient(circle at top left,#1d4ed8 0,#0f172a 35%,#020617 100%);color:var(--text-primary);margin:0;padding:0;overflow-x:hidden;font-family:'Inter',system-ui,sans-serif}#app{display:flex;justify-content:center;align-items:center;min-height:100vh;width:100%}.app-container{aspect-ratio:10/21;height:min(915px,calc(100vh - 40px));max-width:440px;background-color:var(--bg-app);box-shadow:var(--shadow-lg),0 0 0 12px #1E293B;border-radius:40px;position:relative;overflow:hidden;display:flex;flex-direction:column;transform:translate(0,0)}.app-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:30px;background-color:#1E293B;border-radius:15px;z-index:1000;display:flex;align-items:center;justify-content:center}.app-notch::after{content:'';width:12px;height:12px;background-color:#0F172A;border-radius:50%;margin-left:50px}.phone-status-bar{position:absolute;top:0;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;align-items:center;padding:4px 24px 0;height:22px;background-color:var(--bg-app);border-top-left-radius:40px;border-top-right-radius:40px;pointer-events:none}.status-bar-time{font-size:.65rem;font-weight:800;color:#64748B;letter-spacing:.5px}.app-body{flex:1;width:100%;height:100%;overflow-y:auto;padding-top:24px;background:linear-gradient(180deg,#f8fbff 0%,#eef6ff 100%)}
-ion-app{background:transparent}.screen{min-height:100%;padding:18px 18px 96px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 18px}.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,var(--primary),var(--primary-2));display:grid;place-items:center;color:white;font-weight:900;box-shadow:0 10px 24px rgba(37,99,235,.25)}h1,h2,h3,p{margin:0}.muted{color:var(--text-secondary)}.card{background:rgba(255,255,255,.88);border:1px solid rgba(219,234,254,.9);border-radius:var(--radius);padding:16px;box-shadow:0 8px 28px rgba(37,99,235,.08);backdrop-filter:blur(12px)}.login-hero{padding:34px 0 18px;text-align:center}.login-hero .logo{margin:auto;width:72px;height:72px;border-radius:24px;font-size:28px}.input{width:100%;border:1px solid var(--border);background:#fff;border-radius:15px;padding:13px 14px;font:inherit;outline:none}.input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.10)}label{display:block;font-size:12px;font-weight:700;color:#475569;margin:12px 0 7px}.btn{border:0;border-radius:16px;padding:13px 16px;font-weight:800;font:inherit;cursor:pointer;min-height:44px}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:white;box-shadow:0 12px 24px rgba(37,99,235,.22)}.btn-soft{background:#eaf3ff;color:#1d4ed8}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-row{display:flex;gap:10px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric{padding:14px;border-radius:18px;background:linear-gradient(180deg,#fff,#f8fbff);border:1px solid var(--border)}.metric b{display:block;font-size:20px;margin-top:6px}.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:99px;font-size:12px;font-weight:800;background:#e0f2fe;color:#0369a1}.chip.green{background:#dcfce7;color:#166534}.chip.orange{background:#ffedd5;color:#9a3412}.chip.red{background:#fee2e2;color:#991b1b}.list{display:flex;flex-direction:column;gap:10px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:16px;background:#fff;border:1px solid var(--border)}.row-main{min-width:0}.row-title{font-weight:800}.row-sub{font-size:12px;color:var(--text-secondary);margin-top:4px}.tabs{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.94);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px 10px;z-index:900;backdrop-filter:blur(18px)}.tab{border:0;background:transparent;color:#64748b;font-size:10px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;border-radius:14px}.tab.active{background:#eaf3ff;color:var(--primary)}.tab span:first-child{font-size:18px}.section-title{font-size:18px;font-weight:900;margin:18px 0 10px}.fab{position:fixed;right:calc(50% - 198px);bottom:86px;width:54px;height:54px;border-radius:18px}.modal{position:absolute;inset:0;background:rgba(15,23,42,.36);z-index:1200;display:grid;place-items:end center;padding:16px}.sheet{width:100%;background:#fff;border-radius:28px 28px 22px 22px;padding:18px;max-height:86%;overflow:auto}.toast{position:absolute;left:16px;right:16px;top:48px;z-index:1300;background:#0f172a;color:white;border-radius:16px;padding:12px 14px;font-size:13px;box-shadow:0 20px 45px rgba(15,23,42,.25)}.report-preview{background:white;border:1px solid var(--border);border-radius:18px;padding:14px;font-size:12px;line-height:1.55}.analysis{font-size:12px;line-height:1.55}.hide{display:none!important}@media(max-width:500px){body{background:var(--bg-app)}#app{min-height:100vh;min-height:100dvh;align-items:flex-start;justify-content:flex-start}.app-container{max-width:100%!important;width:100%!important;max-height:none!important;height:100vh!important;height:100dvh!important;aspect-ratio:unset!important;border-radius:0!important;box-shadow:none!important;padding-top:env(safe-area-inset-top,0px)}.app-notch,.phone-status-bar{display:none!important}.app-body{padding-top:8px!important}.fab{right:18px}}@media print{body{background:white}#app{display:block}.app-container{height:auto;max-width:none;box-shadow:none;border-radius:0}.tabs,.app-notch,.phone-status-bar,.no-print{display:none!important}.screen{padding:20px}.app-body{overflow:visible}}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px}#app{max-width:1200px;margin:0 auto}.container{background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.1);padding:30px}.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;border-bottom:2px solid #667eea;padding-bottom:20px}.logo{font-size:28px;font-weight:800;color:#667eea}.nav-buttons button{background:#667eea;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;margin-left:10px;font-weight:600}.nav-buttons button:hover{background:#764ba2}.main-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:30px}.stat-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}.stat-card h3{font-size:14px;opacity:0.9;margin-bottom:10px}.stat-card .value{font-size:28px;font-weight:800}.form-section{background:#f8f9fa;padding:20px;border-radius:10px;margin-bottom:20px}.form-section h2{margin-bottom:20px;color:#333}.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:8px;font-weight:600;color:#555}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,0.1)}.btn-submit{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:12px 30px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:16px;width:100%}.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 15px rgba(102,126,234,0.3)}.table-container{overflow-x:auto;margin-top:20px}table{width:100%;border-collapse:collapse}.table-header{background:#667eea;color:white}.table-header th{padding:15px;text-align:left;font-weight:600}.table-body td{padding:12px 15px;border-bottom:1px solid #eee}.table-body tr:hover{background:#f8f9fa}.action-buttons{display:flex;gap:10px}.btn-delete{background:#ff6b6b;color:white;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;font-size:12px}.btn-delete:hover{background:#ff5252}.tab-buttons{display:flex;gap:10px;margin-bottom:20px;border-bottom:2px solid #eee}.tab-buttons button{background:none;border:none;padding:12px 24px;cursor:pointer;font-weight:600;color:#999;border-bottom:3px solid transparent;position:relative;bottom:-2px}.tab-buttons button.active{color:#667eea;border-bottom-color:#667eea}.alert{padding:15px;border-radius:6px;margin-bottom:20px}.alert-success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}.alert-error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}.alert-warning{background:#fff3cd;color:#856404;border:1px solid #ffeeba}.chart-container{background:#f8f9fa;padding:20px;border-radius:10px;margin-bottom:20px}.hidden{display:none!important}.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;padding:30px;border-radius:12px;max-width:500px;width:90%}.modal-close{background:none;border:none;font-size:24px;cursor:pointer;float:right;color:#999}.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}.login-container{background:white;padding:40px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.2);max-width:400px;width:100%}.login-container h1{margin-bottom:30px;color:#333;text-align:center}.toast-container{position:fixed;bottom:20px;right:20px;z-index:2000}.toast-message{background:#333;color:white;padding:15px 20px;border-radius:6px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15)}@media(max-width:768px){.container{padding:15px}.main-content{grid-template-columns:1fr}.header{flex-direction:column;gap:15px;text-align:center}.nav-buttons{display:flex;gap:10px;justify-content:center;width:100%}.nav-buttons button{flex:1}}
 </style>
-</head><body><div id="app"><div class="app-container"><div class="app-notch"></div><div class="phone-status-bar"><span class="status-bar-time" id="clock">12.00</span></div><main class="app-body"><ion-app><div id="root"></div></ion-app></main></div></div>
+</head>
+<body>
+<div id="app"></div>
+
 <script>
-const App=(()=>{let SQL,db,usingFallback=false,currentUser=null,route=location.hash.replace('#/','')||'login',chart=null;const root=document.getElementById('root'),clock=document.getElementById('clock');setInterval(()=>clock.textContent=new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),1000);const roles={admin:['dashboard','users','customers','receivables','payments','reports','settings'],sales:['dashboard','customers','receivables','settings'],finance:['dashboard','receivables','payments','reports','settings'],manager:['dashboard','receivables','payments','reports','settings'],owner:['dashboard','reports','settings']};const roleName={admin:'Admin',sales:'Staf Penjualan',finance:'Staf Keuangan',manager:'Manajer Keuangan',owner:'Pemilik Perusahaan'};const fmt=n=>'Rp '+Number(n||0).toLocaleString('id-ID');const today=()=>new Date().toISOString().slice(0,10);function exec(sql,params=[]){db.run(sql,params);persist()}function query(sql,params=[]){const r=db.exec(sql,params)[0];return r?r.values.map(v=>Object.fromEntries(r.columns.map((c,i)=>[c,v[i]]))):[]}async function persist(){try{const data=db.export();await idbSet('piutangku-db',data)}catch(e){try{localStorage.setItem('piutangku-db-b64',btoa(String.fromCharCode(...db.export())))}catch(_){}}}function idbSet(k,v){return new Promise((res,rej)=>{const o=indexedDB.open('PiutangKuLocal',1);o.onupgradeneeded=()=>o.result.createObjectStore('kv');o.onerror=()=>rej(o.error);o.onsuccess=()=>{const tx=o.result.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)}})}function idbGet(k){return new Promise((res,rej)=>{const o=indexedDB.open('PiutangKuLocal',1);o.onupgradeneeded=()=>o.result.createObjectStore('kv');o.onerror=()=>rej(o.error);o.onsuccess=()=>{const tx=o.result.transaction('kv','readonly'),rq=tx.objectStore('kv').get(k);rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error)}})}async function boot(){try{SQL=await initSqlJs({locateFile:function(f){return "https:"+"//cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/"+f}});const saved=await idbGet('piutangku-db');db=saved?new SQL.Database(new Uint8Array(saved)):new SQL.Database();schema();seed();await persist()}catch(e){usingFallback=true;SQL=await initSqlJs({locateFile:function(f){return "https:"+"//cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/"+f}});db=new SQL.Database();schema();seed();toast('Mode sementara aktif. Data mungkin tidak tersimpan permanen.')}render()}function schema(){db.run(`PRAGMA foreign_keys=ON;CREATE TABLE IF NOT EXISTS profiles(id INTEGER PRIMARY KEY AUTOINCREMENT,full_name TEXT NOT NULL,email TEXT UNIQUE NOT NULL,password TEXT NOT NULL,role TEXT NOT NULL,status TEXT DEFAULT 'active',created_at TEXT DEFAULT CURRENT_TIMESTAMP);CREATE TABLE IF NOT EXISTS customers(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phone TEXT,email TEXT,address TEXT,created_by INTEGER,created_at TEXT DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(created_by) REFERENCES profiles(id));CREATE TABLE IF NOT EXISTS receivables(id INTEGER PRIMARY KEY AUTOINCREMENT,customer_id INTEGER NOT NULL,invoice_no TEXT UNIQUE NOT NULL,transaction_date TEXT NOT NULL,amount REAL NOT NULL,paid_amount REAL DEFAULT 0,remaining_amount REAL DEFAULT 0,due_date TEXT NOT NULL,status TEXT DEFAULT 'unpaid',created_by INTEGER,created_at TEXT DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(customer_id) REFERENCES customers(id),FOREIGN KEY(created_by) REFERENCES profiles(id));CREATE TABLE IF NOT EXISTS payments(id INTEGER PRIMARY KEY AUTOINCREMENT,receivable_id INTEGER NOT NULL,payment_date TEXT NOT NULL,amount REAL NOT NULL,method TEXT,note TEXT,created_by INTEGER,created_at TEXT DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(receivable_id) REFERENCES receivables(id),FOREIGN KEY(created_by) REFERENCES profiles(id));CREATE TABLE IF NOT EXISTS reports(id INTEGER PRIMARY KEY AUTOINCREMENT,report_no TEXT UNIQUE,report_type TEXT,period_start TEXT,period_end TEXT,created_by INTEGER,status TEXT DEFAULT 'generated',pdf_content TEXT,created_at TEXT DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(created_by) REFERENCES profiles(id));CREATE TRIGGER IF NOT EXISTS trg_receivable_insert AFTER INSERT ON receivables BEGIN UPDATE receivables SET remaining_amount=NEW.amount-NEW.paid_amount,status=CASE WHEN NEW.amount-NEW.paid_amount<=0 THEN 'paid' ELSE 'unpaid' END WHERE id=NEW.id;END;CREATE TRIGGER IF NOT EXISTS trg_payment_insert AFTER INSERT ON payments BEGIN UPDATE receivables SET paid_amount=(SELECT COALESCE(SUM(amount),0) FROM payments WHERE receivable_id=NEW.receivable_id),remaining_amount=amount-(SELECT COALESCE(SUM(amount),0) FROM payments WHERE receivable_id=NEW.receivable_id),status=CASE WHEN amount-(SELECT COALESCE(SUM(amount),0) FROM payments WHERE receivable_id=NEW.receivable_id)<=0 THEN 'paid' ELSE 'unpaid' END WHERE id=NEW.receivable_id;END;`)}function seed(){if(query('SELECT COUNT(*) c FROM profiles')[0].c)return;[['Andi Pratama','admin@piutangku.local','admin123','admin'],['Rina Oktaviani','sales@piutangku.local','sales123','sales'],['Siti Rahmawati','keuangan@piutangku.local','keuangan123','finance'],['Dedi Kurniawan','manager@piutangku.local','manager123','manager'],['Budi Santoso','owner@piutangku.local','owner123','owner']].forEach(u=>db.run('INSERT INTO profiles(full_name,email,password,role) VALUES(?,?,?,?)',u));[['PT Sumber Makmur','081234567001','finance@sumber.co.id','Jakarta'],['CV Maju Jaya','081234567002','admin@maju.id','Bandung'],['Toko Berkah Abadi','081234567003','halo@berkah.id','Surabaya']].forEach(c=>db.run('INSERT INTO customers(name,phone,email,address,created_by) VALUES(?,?,?,?,2)',c));db.run("INSERT INTO receivables(customer_id,invoice_no,transaction_date,amount,due_date,created_by) VALUES (1,'INV-2026-001','2026-07-01',12500000,'2026-07-20',2),(2,'INV-2026-002','2026-07-03',8200000,'2026-07-14',2),(3,'INV-2026-003','2026-07-07',4600000,'2026-08-01',2)");db.run("INSERT INTO payments(receivable_id,payment_date,amount,method,note,created_by) VALUES(1,'2026-07-09',2500000,'Transfer','DP awal',3)")}function login(e){e.preventDefault();const email=val('email'),pass=val('password');if(!email||!pass){toast('Email dan password harus diisi');return}const u=query('SELECT * FROM profiles WHERE email=? AND password=? AND status="active"',[email,pass])[0];if(!u)return toast('Email atau password salah.');currentUser=u;route='dashboard';location.hash='/dashboard';render()}function logout(){currentUser=null;route='login';location.hash='/login';render()}function val(id){return document.getElementById(id)?.value||''}function toast(t){let d=document.createElement('div');d.className='toast';d.textContent=t;document.querySelector('.app-container').appendChild(d);setTimeout(()=>d.remove(),3200)}function nav(r){route=r;location.hash='/'+r;render()}window.addEventListener('hashchange',()=>{route=location.hash.replace('#/','')||'login';render()});function layout(title,content){const menu=roles[currentUser.role];return `<div class="screen"><div class="topbar"><div class="brand"><div class="logo">P</div><div><h2>${title}</h2><p class="muted">${currentUser.full_name} · ${roleName[currentUser.role]}</p></div></div><button class="btn btn-soft no-print" onclick="App.logout()">Keluar</button></div>${content}</div><div class="tabs no-print">${menu.map(m=>`<button class="tab ${route==m?'active':''}" onclick="App.nav('${m}')"><span>${icon(m)}</span><span>${label(m)}</span></button>`).join('')}</div>`}function icon(m){return{dashboard:'📊',users:'👥',customers:'🏢',receivables:'🧾',payments:'💳',reports:'📄',settings:'⚙️'}[m]}function label(m){return{dashboard:'Beranda',users:'User',customers:'Pelanggan',receivables:'Piutang',payments:'Bayar',reports:'Laporan',settings:'Atur'}[m]}function stats(){return query(`SELECT (SELECT COUNT(*) FROM customers) customers,(SELECT COUNT(*) FROM receivables) trx,(SELECT COALESCE(SUM(amount),0) FROM receivables) total,(SELECT COALESCE(SUM(remaining_amount),0) FROM receivables) remaining,(SELECT COUNT(*) FROM receivables WHERE status='unpaid' AND due_date<date('now')) overdue,(SELECT COALESCE(SUM(amount),0) FROM payments) paid`)[0]}function render(){if(!db)return;if(!currentUser&&route!=='login'){route='login'}if(route==='login'){root.innerHTML=`<div class="screen"><div class="login-hero"><div class="logo">P</div><h1>PiutangKu</h1><p class="muted">Sistem manajemen piutang local-first</p></div><form class="card" onsubmit="App.login(event)"><label>Email</label><input id="email" class="input" value="admin@piutangku.local"><label>Password</label><input id="password" type="password" class="input" value="admin123"><button class="btn btn-primary" style="width:100%;margin-top:16px">Masuk</button><p class="muted" style="font-size:12px;margin-top:12px">Akun: admin/sales/keuangan/manager/owner @piutangku.local</p></form><div class="card analysis" style="margin-top:14px"><b>Analisis RBAC:</b> Admin mengelola sistem, Sales mengelola pelanggan & transaksi, Keuangan mencatat pembayaran, Manajer membuat laporan PDF, Owner hanya melihat laporan.</div></div>`;return}if(!roles[currentUser.role].includes(route))route='dashboard';root.innerHTML=layout(label(route),views[route]());if(route==='dashboard')setTimeout(drawChart,50)}const views={dashboard(){const s=stats();return `<div class="grid"><div class="metric"><span class="muted">Total Piutang</span><b>${fmt(s.total)}</b></div><div class="metric"><span class="muted">Sisa Piutang</span><b>${fmt(s.remaining)}</b></div><div class="metric"><span class="muted">Pelanggan</span><b>${s.customers}</b></div><div class="metric"><span class="muted">Jatuh Tempo</span><b>${s.overdue}</b></div></div><div class="section-title">Grafik Piutang</div><div class="card"><canvas id="chart" height="190"></canvas></div><div class="section-title">Transaksi Terbaru</div><div class="list">${receivableRows().slice(0,5).map(rowHtml).join('')}</div>`},users(){return `<div class="card"><h3>Tambah Pengguna</h3>${formUser()}</div><div class="section-title">Daftar Pengguna</div><div class="list">${query('SELECT * FROM profiles ORDER BY id').map(u=>`<div class="row"><div><div class="row-title">${u.full_name}</div><div class="row-sub">${u.email} · ${roleName[u.role]}</div></div><span class="chip green">${u.status}</span></div>`).join('')}</div>`},customers(){return `<div class="card"><h3>Tambah Pelanggan</h3>${formCustomer()}</div><div class="section-title">Data Pelanggan</div><div class="list">${query('SELECT * FROM customers ORDER BY id DESC').map(c=>`<div class="row"><div><div class="row-title">${c.name}</div><div class="row-sub">${c.phone} · ${c.address}</div></div><span class="chip">ID ${c.id}</span></div>`).join('')}</div>`},receivables(){return `${currentUser.role!=='owner'?`<div class="card"><h3>Tambah Transaksi Piutang</h3>${formReceivable()}</div>`:''}<div class="section-title">Daftar Piutang</div><div class="list">${receivableRows().map(rowHtml).join('')}</div>`},payments(){return `<div class="card"><h3>Catat Pembayaran</h3>${formPayment()}</div><div class="section-title">Riwayat Pembayaran</div><div class="list">${query('SELECT p.*,r.invoice_no,c.name customer FROM payments p JOIN receivables r ON r.id=p.receivable_id JOIN customers c ON c.id=r.customer_id ORDER BY p.id DESC').map(p=>`<div class="row"><div><div class="row-title">${fmt(p.amount)} · ${p.invoice_no}</div><div class="row-sub">${p.customer} · ${p.payment_date} · ${p.method}</div></div></div>`).join('')}</div>`},reports(){return `<div class="card no-print"><h3>Filter Laporan</h3><label>Awal</label><input id="periodStart" type="date" class="input" value="2026-07-01"><label>Akhir</label><input id="periodEnd" type="date" class="input" value="${today()}"><div class="btn-row" style="margin-top:12px">${currentUser.role==='manager'?'<button class="btn btn-primary" onclick="App.generateReport()">Generate PDF</button>':''}<button class="btn btn-soft" onclick="window.print()">Cetak</button></div></div><div class="section-title">Preview Laporan</div><div class="report-preview" id="reportBox">${reportHtml()}</div><div class="section-title no-print">Riwayat Laporan PDF</div><div class="list no-print">${query('SELECT r.*,p.full_name FROM reports r JOIN profiles p ON p.id=r.created_by ORDER BY r.id DESC').map(r=>`<div class="row"><div><div class="row-title">${r.report_no}</div><div class="row-sub">${r.report_type} · ${r.created_at}</div></div><button class="btn btn-soft" onclick="window.print()">Cetak</button></div>`).join('')||'<p class="muted">Belum ada laporan.</p>'}</div>`},settings(){return `<div class="card"><h3>Pengaturan Data Lokal</h3><p class="muted">Database berjalan offline dengan sql.js, auto-save ke IndexedDB, dan fallback RAM bila penyimpanan gagal.</p><div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" onclick="App.exportDb()">Cadangkan Data</button><label class="btn btn-soft">Pulihkan Data<input type="file" accept=".sqlite,.db" hidden onchange="App.importDb(event)"></label></div></div><div class="section-title">Ubah Password</div><div class="card"><label>Password Baru</label><input id="newPass" class="input"><button class="btn btn-primary" style="margin-top:12px" onclick="App.changePass()">Simpan Password</button></div>`}};function formUser(){return `<label>Nama</label><input id="uName" class="input"><label>Email</label><input id="uEmail" class="input"><label>Password</label><input id="uPass" class="input"><label>Role</label><select id="uRole" class="input"><option value="admin">Admin</option><option value="sales">Staf Penjualan</option><option value="finance">Staf Keuangan</option><option value="manager">Manajer Keuangan</option><option value="owner">Pemilik</option></select><button class="btn btn-primary" style="margin-top:12px" onclick="App.addUser()">Simpan</button>`}function formCustomer(){return `<label>Nama Pelanggan</label><input id="cName" class="input"><label>Telepon</label><input id="cPhone" class="input"><label>Email</label><input id="cEmail" class="input"><label>Alamat</label><input id="cAddress" class="input"><button class="btn btn-primary" style="margin-top:12px" onclick="App.addCustomer()">Simpan</button>`}function formReceivable(){let cs=query('SELECT id,name FROM customers');if(!cs||cs.length===0)return `<p class="muted">Tambah pelanggan terlebih dahulu</p>`;return `<label>Pelanggan</label><select id="rCustomer" class="input">${cs.map(c=>`<option value="${c.id}">${c.name}</option>`)}</select><label>Nomor Faktur</label><input id="rInv" class="input" value="INV-${Date.now().toString().slice(-6)}"><label>Nominal</label><input id="rAmount" type="number" class="input"><label>Jatuh Tempo</label><input id="rDue" type="date" class="input" value="${today()}"><button class="btn btn-primary" style="margin-top:12px" onclick="App.addReceivable()">Simpan</button>`}function formPayment(){let rs=receivableRows().filter(r=>r.status!=='paid');if(!rs||rs.length===0)return `<p class="muted">Tidak ada piutang yang perlu dibayar</p>`;return `<label>Faktur</label><select id="pRec" class="input">${rs.map(r=>`<option value="${r.id}">${r.invoice_no} - ${r.customer} (${fmt(r.remaining_amount)})</option>`)}</select><label>Nominal Pembayaran</label><input id="pAmount" type="number" class="input"><label>Metode</label><select id="pMethod" class="input"><option>Transfer</option><option>Tunai</option><option>Giro</option></select><label>Keterangan</label><input id="pNote" class="input"><button class="btn btn-primary" style="margin-top:12px" onclick="App.addPayment()">Catat Pembayaran</button>`}function receivableRows(){return query('SELECT r.*,c.name customer FROM receivables r JOIN customers c ON c.id=r.customer_id ORDER BY r.id DESC')}function rowHtml(r){let cls=r.status==='paid'?'green':(r.due_date<today()?'red':'orange');return `<div class="row"><div class="row-main"><div class="row-title">${r.invoice_no} · ${r.customer}</div><div class="row-sub">Total ${fmt(r.amount)} · Sisa ${fmt(r.remaining_amount)} · JT ${r.due_date}</div></div><span class="chip ${cls}">${r.status==='paid'?'Lunas':(r.due_date<today()?'Tempo':'Belum')}</span></div>`}function addUser(){const name=val('uName'),email=val('uEmail'),pass=val('uPass'),role=val('uRole');if(!name||!email||!pass||!role){toast('Semua field harus diisi');return}exec('INSERT INTO profiles(full_name,email,password,role) VALUES(?,?,?,?)',[name,email,pass,role]);toast('Pengguna tersimpan.');render()}function addCustomer(){const name=val('cName'),phone=val('cPhone'),email=val('cEmail'),address=val('cAddress');if(!name){toast('Nama pelanggan harus diisi');return}exec('INSERT INTO customers(name,phone,email,address,created_by) VALUES(?,?,?,?,?)',[name,phone,email,address,currentUser.id]);toast('Pelanggan tersimpan.');render()}function addReceivable(){const cust=val('rCustomer'),inv=val('rInv'),amount=val('rAmount'),due=val('rDue');if(!cust||!inv||!amount||!due){toast('Semua field harus diisi');return}if(isNaN(amount)||amount<=0){toast('Nominal harus lebih besar dari 0');return}exec('INSERT INTO receivables(customer_id,invoice_no,transaction_date,amount,due_date,created_by) VALUES(?,?,?,?,?,?)',[cust,inv,today(),+amount,due,currentUser.id]);toast('Piutang tercatat.');render()}function addPayment(){const rec=val('pRec'),amount=val('pAmount'),method=val('pMethod'),note=val('pNote');if(!rec||!amount||!method){toast('Faktur, nominal, dan metode harus diisi');return}if(isNaN(amount)||amount<=0){toast('Nominal harus lebih besar dari 0');return}exec('INSERT INTO payments(receivable_id,payment_date,amount,method,note,created_by) VALUES(?,?,?,?,?,?)',[rec,today(),+amount,method,note,currentUser.id]);toast('Pembayaran tercatat dan trigger memperbarui sisa piutang.');render()}function changePass(){const newPass=val('newPass');if(!newPass){toast('Password baru harus diisi');return}exec('UPDATE profiles SET password=? WHERE id=?',[newPass,currentUser.id]);toast('Password diperbarui.')}function reportHtml(){const s=stats(),rows=receivableRows();return `<h2>PiutangKu</h2><p class="muted">Laporan Ringkas Piutang Perusahaan</p><hr><p>Total Piutang: <b>${fmt(s.total)}</b><br>Total Pembayaran: <b>${fmt(s.paid)}</b><br>Sisa Piutang: <b>${fmt(s.remaining)}</b><br>Piutang Jatuh Tempo: <b>${s.overdue} faktur</b></p><table style="width:100%;border-collapse:collapse"><thead><tr><th align="left">Faktur</th><th align="left">Pelanggan</th><th align="right">Sisa</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.invoice_no}</td><td>${r.customer}</td><td align="right">${fmt(r.remaining_amount)}</td></tr>`).join('')}</tbody></table>`}function generateReport(){const no='RPT-'+Date.now();exec('INSERT INTO reports(report_no,report_type,period_start,period_end,created_by,pdf_content) VALUES(?,?,?,?,?,?)',[no,'Laporan Piutang',val('periodStart'),val('periodEnd'),currentUser.id,btoa(unescape(encodeURIComponent(reportHtml())))]);toast('Laporan PDF virtual dibuat. Gunakan Cetak untuk simpan PDF.');render()}function drawChart(){const ctx=document.getElementById('chart');if(!ctx)return;const s=stats();if(chart)chart.destroy();chart=new Chart(ctx,{type:'doughnut',data:{labels:['Terbayar','Sisa Piutang'],datasets:[{data:[s.paid,s.remaining],backgroundColor:['#16a34a','#2563eb'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom'}},cutout:'68%'}})}function exportDb(){const blob=new Blob([db.export()],{type:'application/octet-stream'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='piutangku-backup.sqlite';a.click()}function importDb(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async()=>{db=new SQL.Database(new Uint8Array(r.result));await persist();toast('Data berhasil dipulihkan.');render()};r.readAsArrayBuffer(f)}return{boot,login,logout,nav,addUser,addCustomer,addReceivable,addPayment,changePass,generateReport,exportDb,importDb}})();App.boot();
-</script></body></html>
+// ============ DATABASE SETUP ============
+let db, SQL;
+let currentUser = null;
+let currentPage = 'login';
+
+const IDB_NAME = 'PiutangKuDB';
+const IDB_STORE = 'database';
+
+// ============ UTILITY FUNCTIONS ============
+const fmt = (n) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(Number(n) || 0);
+};
+
+const today = () => new Date().toISOString().split('T')[0];
+
+const toast = (msg, type = 'info') => {
+  const container = document.querySelector('.toast-container') || (() => {
+    const div = document.createElement('div');
+    div.className = 'toast-container';
+    document.body.appendChild(div);
+    return div;
+  })();
+  
+  const toast = document.createElement('div');
+  toast.className = `toast-message`;
+  toast.textContent = msg;
+  toast.style.background = type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#667eea';
+  container.appendChild(toast);
+  
+  setTimeout(() => toast.remove(), 3000);
+};
+
+// ============ INDEXEDDB FUNCTIONS ============
+async function initDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(IDB_NAME, 1);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    
+    request.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE);
+      }
+    };
+  });
+}
+
+async function saveDB() {
+  const idb = await initDB();
+  return new Promise((resolve, reject) => {
+    const tx = idb.transaction(IDB_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    const request = store.put(db.export(), 'main');
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+async function loadDB() {
+  const idb = await initDB();
+  return new Promise((resolve, reject) => {
+    const tx = idb.transaction(IDB_STORE, 'readonly');
+    const store = tx.objectStore(IDB_STORE);
+    const request = store.get('main');
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+// ============ SCHEMA & SEED ============
+function createSchema() {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      role TEXT CHECK(role IN('admin','manager','staff')) DEFAULT 'staff'
+    );
+
+    CREATE TABLE IF NOT EXISTS customers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT,
+      phone TEXT,
+      address TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS invoices (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      invoice_no TEXT UNIQUE NOT NULL,
+      customer_id INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      due_date TEXT NOT NULL,
+      status TEXT CHECK(status IN('unpaid','partial','paid')) DEFAULT 'unpaid',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(customer_id) REFERENCES customers(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS payments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      invoice_id INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      payment_date TEXT NOT NULL,
+      method TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(invoice_id) REFERENCES invoices(id)
+    );
+  `);
+}
+
+function seedData() {
+  try {
+    // Check if data exists
+    const result = db.exec("SELECT COUNT(*) as count FROM users");
+    if (result[0] && result[0].values[0][0] > 0) return;
+
+    // Seed users
+    db.run("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)", ['Admin', 'admin@piutangku.com', 'admin123', 'admin']);
+    db.run("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)", ['Manager', 'manager@piutangku.com', 'manager123', 'manager']);
+    db.run("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)", ['Staff', 'staff@piutangku.com', 'staff123', 'staff']);
+
+    // Seed customers
+    db.run("INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)", ['PT Sumber Makmur', 'pt@sumber.com', '081234567001', 'Jakarta']);
+    db.run("INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)", ['CV Maju Jaya', 'cv@maju.com', '081234567002', 'Bandung']);
+    db.run("INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)", ['Toko Berkah', 'toko@berkah.com', '081234567003', 'Surabaya']);
+
+    // Seed invoices
+    db.run("INSERT INTO invoices (invoice_no, customer_id, amount, due_date, status) VALUES (?, ?, ?, ?, ?)", ['INV-001', 1, 5000000, '2026-07-20', 'unpaid']);
+    db.run("INSERT INTO invoices (invoice_no, customer_id, amount, due_date, status) VALUES (?, ?, ?, ?, ?)", ['INV-002', 2, 3000000, '2026-07-15', 'partial']);
+    db.run("INSERT INTO invoices (invoice_no, customer_id, amount, due_date, status) VALUES (?, ?, ?, ?, ?)", ['INV-003', 3, 2000000, '2026-07-25', 'paid']);
+
+    // Seed payment
+    db.run("INSERT INTO payments (invoice_id, amount, payment_date, method) VALUES (?, ?, ?, ?)", [2, 1500000, today(), 'Transfer']);
+  } catch (e) {
+    console.error('Seed error:', e);
+  }
+}
+
+// ============ DATABASE QUERIES ============
+function executeQuery(sql, params = []) {
+  try {
+    return db.exec(sql, params);
+  } catch (e) {
+    console.error('Query error:', e);
+    return [];
+  }
+}
+
+function getQuery(sql, params = []) {
+  const result = executeQuery(sql, params);
+  if (result.length === 0) return [];
+  
+  const columns = result[0].columns;
+  return result[0].values.map(row => {
+    const obj = {};
+    columns.forEach((col, i) => obj[col] = row[i]);
+    return obj;
+  });
+}
+
+// ============ AUTH FUNCTIONS ============
+function login(email, password) {
+  const users = getQuery('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
+  
+  if (users.length === 0) {
+    toast('Email atau password salah', 'error');
+    return false;
+  }
+
+  currentUser = users[0];
+  currentPage = 'dashboard';
+  render();
+  return true;
+}
+
+function logout() {
+  currentUser = null;
+  currentPage = 'login';
+  render();
+}
+
+// ============ PAGE RENDERS ============
+function renderLogin() {
+  return `
+    <div class="login-page">
+      <div class="login-container">
+        <h1>🏦 PiutangKu</h1>
+        <p style="text-align:center;color:#666;margin-bottom:30px">Sistem Manajemen Piutang Local-First</p>
+        
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="admin@piutangku.com" value="admin@piutangku.com">
+        </div>
+        
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="admin123" value="admin123">
+        </div>
+        
+        <button class="btn-submit" onclick="handleLogin()">Masuk</button>
+        
+        <div style="margin-top:20px;padding:15px;background:#f0f7ff;border-radius:6px;font-size:12px;color:#666">
+          <strong>Demo Accounts:</strong><br>
+          📧 admin@piutangku.com / admin123<br>
+          📧 manager@piutangku.com / manager123<br>
+          📧 staff@piutangku.com / staff123
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderDashboard() {
+  const stats = getQuery(`
+    SELECT 
+      (SELECT COUNT(*) FROM invoices) as total_invoices,
+      (SELECT COUNT(*) FROM invoices WHERE status='unpaid') as unpaid_count,
+      (SELECT COALESCE(SUM(amount), 0) FROM invoices WHERE status='unpaid') as unpaid_amount,
+      (SELECT COALESCE(SUM(amount), 0) FROM invoices) as total_amount
+  `)[0];
+
+  return `
+    <div class="container">
+      <div class="header">
+        <div class="logo">🏦 PiutangKu</div>
+        <div class="nav-buttons">
+          <button onclick="goToPage('customers')">👥 Pelanggan</button>
+          <button onclick="goToPage('invoices')">🧾 Piutang</button>
+          <button onclick="goToPage('payments')">💳 Pembayaran</button>
+          <button onclick="logout()">🚪 Logout</button>
+        </div>
+      </div>
+
+      <div style="background:#f0f7ff;padding:15px;border-radius:8px;margin-bottom:20px">
+        <strong>${currentUser.name}</strong> (${currentUser.role}) | ${currentUser.email}
+      </div>
+
+      <div class="main-content">
+        <div class="stat-card">
+          <h3>Total Piutang</h3>
+          <div class="value">${fmt(stats.total_amount)}</div>
+        </div>
+        <div class="stat-card">
+          <h3>Belum Dibayar</h3>
+          <div class="value">${fmt(stats.unpaid_amount)}</div>
+        </div>
+        <div class="stat-card">
+          <h3>Jumlah Faktur</h3>
+          <div class="value">${stats.total_invoices}</div>
+        </div>
+        <div class="stat-card">
+          <h3>Faktur Overdue</h3>
+          <div class="value">${getQuery("SELECT COUNT(*) as count FROM invoices WHERE status='unpaid' AND due_date < date('now')")[0].count}</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>📊 Ringkasan Piutang Terbaru</h2>
+        <div class="table-container">
+          <table>
+            <thead class="table-header">
+              <tr>
+                <th>Faktur</th>
+                <th>Pelanggan</th>
+                <th>Jumlah</th>
+                <th>Jatuh Tempo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              ${getQuery(`
+                SELECT i.*, c.name as customer_name 
+                FROM invoices i 
+                JOIN customers c ON i.customer_id = c.id 
+                ORDER BY i.created_at DESC 
+                LIMIT 5
+              `).map(inv => `
+                <tr>
+                  <td><strong>${inv.invoice_no}</strong></td>
+                  <td>${inv.customer_name}</td>
+                  <td>${fmt(inv.amount)}</td>
+                  <td>${inv.due_date}</td>
+                  <td><span style="background:${inv.status === 'paid' ? '#d4edda' : inv.status === 'partial' ? '#fff3cd' : '#f8d7da'};padding:4px 8px;border-radius:4px;font-size:12px;font-weight:600">${inv.status.toUpperCase()}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCustomers() {
+  const customers = getQuery('SELECT * FROM customers ORDER BY created_at DESC');
+
+  return `
+    <div class="container">
+      <div class="header">
+        <div class="logo">👥 Data Pelanggan</div>
+        <button class="nav-buttons" onclick="goToPage('dashboard')" style="border:none;background:#667eea;color:white;padding:10px 20px;border-radius:6px;cursor:pointer">← Kembali</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Tambah Pelanggan Baru</h2>
+        <div class="form-group">
+          <label>Nama Pelanggan</label>
+          <input type="text" id="customerName" placeholder="PT/CV/Toko...">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="customerEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label>Telepon</label>
+          <input type="tel" id="customerPhone" placeholder="08xx-xxxx-xxxx">
+        </div>
+        <div class="form-group">
+          <label>Alamat</label>
+          <textarea id="customerAddress" placeholder="Alamat lengkap..." rows="3"></textarea>
+        </div>
+        <button class="btn-submit" onclick="addCustomer()">Simpan Pelanggan</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Daftar Pelanggan</h2>
+        <div class="table-container">
+          <table>
+            <thead class="table-header">
+              <tr>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Telepon</th>
+                <th>Alamat</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              ${customers.map(cust => `
+                <tr>
+                  <td><strong>${cust.name}</strong></td>
+                  <td>${cust.email || '-'}</td>
+                  <td>${cust.phone || '-'}</td>
+                  <td>${cust.address || '-'}</td>
+                  <td><button class="btn-delete" onclick="deleteCustomer(${cust.id})">Hapus</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderInvoices() {
+  const invoices = getQuery(`
+    SELECT i.*, c.name as customer_name 
+    FROM invoices i 
+    JOIN customers c ON i.customer_id = c.id 
+    ORDER BY i.created_at DESC
+  `);
+  const customers = getQuery('SELECT * FROM customers');
+
+  return `
+    <div class="container">
+      <div class="header">
+        <div class="logo">🧾 Data Piutang</div>
+        <button class="nav-buttons" onclick="goToPage('dashboard')" style="border:none;background:#667eea;color:white;padding:10px 20px;border-radius:6px;cursor:pointer">← Kembali</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Tambah Faktur Piutang</h2>
+        <div class="form-group">
+          <label>Pelanggan</label>
+          <select id="invoiceCustomer">
+            <option value="">-- Pilih Pelanggan --</option>
+            ${customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Nomor Faktur</label>
+          <input type="text" id="invoiceNo" placeholder="INV-001">
+        </div>
+        <div class="form-group">
+          <label>Jumlah</label>
+          <input type="number" id="invoiceAmount" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Jatuh Tempo</label>
+          <input type="date" id="invoiceDueDate" value="${today()}">
+        </div>
+        <button class="btn-submit" onclick="addInvoice()">Simpan Faktur</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Daftar Piutang</h2>
+        <div class="table-container">
+          <table>
+            <thead class="table-header">
+              <tr>
+                <th>Faktur</th>
+                <th>Pelanggan</th>
+                <th>Jumlah</th>
+                <th>Jatuh Tempo</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              ${invoices.map(inv => `
+                <tr>
+                  <td><strong>${inv.invoice_no}</strong></td>
+                  <td>${inv.customer_name}</td>
+                  <td>${fmt(inv.amount)}</td>
+                  <td>${inv.due_date}</td>
+                  <td><span style="background:${inv.status === 'paid' ? '#d4edda' : inv.status === 'partial' ? '#fff3cd' : '#f8d7da'};padding:4px 8px;border-radius:4px;font-size:12px;font-weight:600">${inv.status.toUpperCase()}</span></td>
+                  <td><button class="btn-delete" onclick="deleteInvoice(${inv.id})">Hapus</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPayments() {
+  const payments = getQuery(`
+    SELECT p.*, i.invoice_no, c.name as customer_name 
+    FROM payments p 
+    JOIN invoices i ON p.invoice_id = i.id 
+    JOIN customers c ON i.customer_id = c.id 
+    ORDER BY p.created_at DESC
+  `);
+  const invoices = getQuery(`
+    SELECT i.* FROM invoices i WHERE i.status != 'paid' ORDER BY i.invoice_no
+  `);
+
+  return `
+    <div class="container">
+      <div class="header">
+        <div class="logo">💳 Pembayaran</div>
+        <button class="nav-buttons" onclick="goToPage('dashboard')" style="border:none;background:#667eea;color:white;padding:10px 20px;border-radius:6px;cursor:pointer">← Kembali</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Catat Pembayaran</h2>
+        <div class="form-group">
+          <label>Faktur</label>
+          <select id="paymentInvoice">
+            <option value="">-- Pilih Faktur --</option>
+            ${invoices.map(i => `<option value="${i.id}">${i.invoice_no}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Pembayaran</label>
+          <input type="number" id="paymentAmount" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Tanggal Pembayaran</label>
+          <input type="date" id="paymentDate" value="${today()}">
+        </div>
+        <div class="form-group">
+          <label>Metode</label>
+          <select id="paymentMethod">
+            <option>Transfer Bank</option>
+            <option>Tunai</option>
+            <option>Cek</option>
+          </select>
+        </div>
+        <button class="btn-submit" onclick="addPayment()">Simpan Pembayaran</button>
+      </div>
+
+      <div class="form-section">
+        <h2>Riwayat Pembayaran</h2>
+        <div class="table-container">
+          <table>
+            <thead class="table-header">
+              <tr>
+                <th>Faktur</th>
+                <th>Pelanggan</th>
+                <th>Jumlah</th>
+                <th>Tanggal</th>
+                <th>Metode</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              ${payments.map(pay => `
+                <tr>
+                  <td><strong>${pay.invoice_no}</strong></td>
+                  <td>${pay.customer_name}</td>
+                  <td>${fmt(pay.amount)}</td>
+                  <td>${pay.payment_date}</td>
+                  <td>${pay.method}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ============ CRUD FUNCTIONS ============
+function addCustomer() {
+  const name = document.getElementById('customerName')?.value || '';
+  const email = document.getElementById('customerEmail')?.value || '';
+  const phone = document.getElementById('customerPhone')?.value || '';
+  const address = document.getElementById('customerAddress')?.value || '';
+
+  if (!name) {
+    toast('Nama pelanggan harus diisi', 'error');
+    return;
+  }
+
+  db.run('INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)', [name, email, phone, address]);
+  saveDB();
+  toast('Pelanggan berhasil ditambahkan', 'success');
+  
+  document.getElementById('customerName').value = '';
+  document.getElementById('customerEmail').value = '';
+  document.getElementById('customerPhone').value = '';
+  document.getElementById('customerAddress').value = '';
+  
+  render();
+}
+
+function deleteCustomer(id) {
+  if (!confirm('Yakin ingin menghapus pelanggan ini?')) return;
+  db.run('DELETE FROM customers WHERE id = ?', [id]);
+  saveDB();
+  toast('Pelanggan dihapus', 'success');
+  render();
+}
+
+function addInvoice() {
+  const customerId = document.getElementById('invoiceCustomer')?.value || '';
+  const invoiceNo = document.getElementById('invoiceNo')?.value || '';
+  const amount = parseFloat(document.getElementById('invoiceAmount')?.value || 0);
+  const dueDate = document.getElementById('invoiceDueDate')?.value || '';
+
+  if (!customerId || !invoiceNo || amount <= 0 || !dueDate) {
+    toast('Semua field harus diisi dengan benar', 'error');
+    return;
+  }
+
+  db.run('INSERT INTO invoices (customer_id, invoice_no, amount, due_date) VALUES (?, ?, ?, ?)', 
+    [customerId, invoiceNo, amount, dueDate]);
+  saveDB();
+  toast('Faktur berhasil ditambahkan', 'success');
+  
+  document.getElementById('invoiceCustomer').value = '';
+  document.getElementById('invoiceNo').value = '';
+  document.getElementById('invoiceAmount').value = '';
+  
+  render();
+}
+
+function deleteInvoice(id) {
+  if (!confirm('Yakin ingin menghapus faktur ini?')) return;
+  db.run('DELETE FROM invoices WHERE id = ?', [id]);
+  saveDB();
+  toast('Faktur dihapus', 'success');
+  render();
+}
+
+function addPayment() {
+  const invoiceId = document.getElementById('paymentInvoice')?.value || '';
+  const amount = parseFloat(document.getElementById('paymentAmount')?.value || 0);
+  const paymentDate = document.getElementById('paymentDate')?.value || '';
+  const method = document.getElementById('paymentMethod')?.value || '';
+
+  if (!invoiceId || amount <= 0 || !paymentDate) {
+    toast('Semua field harus diisi dengan benar', 'error');
+    return;
+  }
+
+  db.run('INSERT INTO payments (invoice_id, amount, payment_date, method) VALUES (?, ?, ?, ?)', 
+    [invoiceId, amount, paymentDate, method]);
+
+  // Update invoice status
+  const invoice = getQuery('SELECT * FROM invoices WHERE id = ?', [invoiceId])[0];
+  if (invoice) {
+    const totalPaid = getQuery('SELECT COALESCE(SUM(amount), 0) as total FROM payments WHERE invoice_id = ?', [invoiceId])[0].total + amount;
+    let status = 'unpaid';
+    if (totalPaid >= invoice.amount) {
+      status = 'paid';
+    } else if (totalPaid > 0) {
+      status = 'partial';
+    }
+    db.run('UPDATE invoices SET status = ? WHERE id = ?', [status, invoiceId]);
+  }
+
+  saveDB();
+  toast('Pembayaran berhasil dicatat', 'success');
+  
+  document.getElementById('paymentInvoice').value = '';
+  document.getElementById('paymentAmount').value = '';
+  
+  render();
+}
+
+// ============ NAVIGATION ============
+function goToPage(page) {
+  if (!currentUser) {
+    currentPage = 'login';
+  } else {
+    currentPage = page;
+  }
+  render();
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail')?.value || '';
+  const password = document.getElementById('loginPassword')?.value || '';
+  
+  if (!email || !password) {
+    toast('Email dan password harus diisi', 'error');
+    return;
+  }
+
+  login(email, password);
+}
+
+// ============ MAIN RENDER ============
+function render() {
+  const app = document.getElementById('app');
+  
+  if (!currentUser) {
+    app.innerHTML = renderLogin();
+  } else if (currentPage === 'dashboard') {
+    app.innerHTML = renderDashboard();
+  } else if (currentPage === 'customers') {
+    app.innerHTML = renderCustomers();
+  } else if (currentPage === 'invoices') {
+    app.innerHTML = renderInvoices();
+  } else if (currentPage === 'payments') {
+    app.innerHTML = renderPayments();
+  } else {
+    app.innerHTML = renderDashboard();
+  }
+}
+
+// ============ BOOT ============
+async function boot() {
+  try {
+    SQL = await initSqlJs({
+      locateFile: file => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${file}`
+    });
+
+    let savedDB = await loadDB();
+    
+    if (savedDB) {
+      db = new SQL.Database(new Uint8Array(savedDB));
+    } else {
+      db = new SQL.Database();
+      createSchema();
+      seedData();
+      await saveDB();
+    }
+
+    render();
+  } catch (error) {
+    console.error('Boot error:', error);
+    toast('Error menginisialisasi aplikasi', 'error');
+  }
+}
+
+// Start app
+boot();
+</script>
+</body>
+</html>
